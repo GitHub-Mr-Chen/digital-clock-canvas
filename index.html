@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="asset/css/style.css"> -->
+    <style>
+        #canvas {
+            /* background: rgb(62, 35, 158); */
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas">
+
+    </canvas>
+    
+    <script src="asset/js/data.js"></script>
+    <script>
+        function brush() {//构造函数：私有行为 姓名，年龄等自身属性
+            var canvas = document.getElementById("canvas");
+            canvas.width = 1200;
+            canvas.height = 50;
+            this.cxt = canvas.getContext("2d");
+            this.cW = canvas.width;
+            this.cH = canvas.height;
+            this.R = this.cH / 20 - 1;
+        }
+        brush.prototype = {
+            init: function (params, index) { //  原型： 公共行为  吃饭，走路，上学等所有人都能看到额都能做的
+                for (let i = 0; i < digit[params].length; i++) { // 行数
+                    // const element = array[i];
+                    for (let j = 0; j < digit[params][i].length; j++) {// 列数
+                        // console.log(digit[params][i]);
+                        if (digit[params][i][j] == 1) {
+                            // const element = array[j];
+                            this.cxt.fillStyle = "#333";
+                            this.cxt.beginPath();
+                            this.cxt.arc(index * this.R * 30 + j * 2 * (this.R + 1) + (this.R + 1), i * 2 * (this.R + 1) + (this.R + 1), this.R, 0, 2 * Math.PI, false);
+                            this.cxt.closePath;
+                            this.cxt.fill();
+                            // console.log(index);
+
+                        }
+                    }
+
+                }
+            },
+            // 时间
+            getTime: function (params) {
+                let data = [];
+                let temp = /(\d)(\d):(\d)(\d):(\d)(\d)/.exec(new Date);
+                canvas.height = 100;// 重置画布高度
+                data.push(temp[1], temp[2], 10, temp[3], temp[4], 10, temp[5], temp[6]);
+                canvas.height = 150;
+                for (let i = 0; i < data.length; i++) {
+                    brush.init(data[i], i);
+                }
+                // console.log(temp, data);
+            },
+            circulation: function (params) {
+                this.getTime();
+                setTimeout(() => {
+                    this.circulation();
+                    this.getTime();
+                }, 1000);
+            }
+
+        }
+        var brush = new brush();
+        brush.circulation();
+        // setInterval(() => {
+            
+        // }, 1000);
+
+        // for (let i = 0; i < 11; i++) {
+        //     brush.init(i, i);
+        // }
+        /*  快速画图
+         1 画无规则图形，数组，矩阵等等
+         2 数组点阵映射
+            0 不映射 1 映射   
+         3 数组绘制映射
+           绘制0—9 ：    11个元素
+           行 列 的多少10*7
+         4 用canvas 绘制
+          画圆 cxt.arc（x,y,r,0,2Math.PI,false);
+          设置辅助矩形宽高：2*(R+l);
+          数字   宽 2*(R+l)*7     高 2*(R+l)*10
+          高100px  r=4   x1=1*(4+1),y1=(4+1)*1
+          JS  从0开始，不是从1开始
+          Xn =n*2*(R+1)+(R+1)
+          Yn=n*2*(R+1)+(R+1)
+          R随意设置
+          坐标  
+        */
+    </script>
+
+</body>
+
+</html>
